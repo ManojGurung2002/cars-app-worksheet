@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function Cars() {
@@ -9,14 +9,18 @@ function Cars() {
     name: "",
     releaseYear: "",
     color: ""
-  }
+  };
+
   const [carFormData, setCarFormData] = useState(carFormInitialData);
   const [carsData, setCarsData] = useState([]);
 
   const getCarsData = async () => {
     const response = await fetch("http://localhost:3001/list").then((res) => res.json());
     setCarsData(response);
-  }
+  };
+  useEffect(() => {
+    getCarsData()
+  }, [])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -24,7 +28,7 @@ function Cars() {
       ...carFormData,
       [name]: value,
     });
-  }
+  };
 
   const handleSubmit = async (event) => {
 
@@ -45,28 +49,41 @@ function Cars() {
     });
     setCarsData(response);
     setCarFormData(carFormInitialData);
-  }
+  };
 
-  const handleDelete = (id) => {
+  // const handleDelete = (id) => {
 
-    const result = carsData.filter((car) => car.id !== id);
-    setCarsData(result);
-  }
+  //   const result = carsData.filter((car) => car.id !== id);
+  //   setCarsData(result);
+  // }
+
+  const handleDelete = async (event) => {
+    event.preventDefault();
+
+    let response = await fetch("http://localhost:3001/delete", {
+      method: "DELETE",
+      body: JSON.stringify({
+        id: event.target.parentElement.id,
+      }),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(res => res.json());
+    setCarsData(response);
+  };
 
   /** 🥳🥳🥳🥳🥳🥳 DOUBLE BONUS POINTS 🥳🥳🥳🥳🥳🥳 */
   // const handleEdit = () => {
-    /**
-     * When clicked on a edit button figure out a way to edit the car data.
-     * Once edited send the updated data to NodeJS.
-     * Then use javascript fetch to send DELETE request to NodeJS
-     * https://openjavascript.info/2022/01/03/using-fetch-to-make-get-post-put-and-delete-requests/
-     */
+  /**
+   * When clicked on a edit button figure out a way to edit the car data.
+   * Once edited send the updated data to NodeJS.
+   * Then use javascript fetch to send DELETE request to NodeJS
+   * https://openjavascript.info/2022/01/03/using-fetch-to-make-get-post-put-and-delete-requests/
+   */
   // }
 
   return (
     <div className='cars-from-wrapper'>
 
-      <form id="cars-form" onSubmit={handleSubmit} autoComplete="off">     
+      <form id="cars-form" onSubmit={handleSubmit} autoComplete="off">
         <label>
           ID:
           <input name='id' type="text" value={carFormData.id} onChange={handleInputChange} />
@@ -126,7 +143,7 @@ function Cars() {
                   <td>{car.name}</td>
                   <td>{car.releaseYear}</td>
                   <td>{car.color}</td>
-                  <td><button onClick={() => handleDelete(car.id)}>🗑</button></td>
+                  <td id={car.id}><button onClick={handleDelete}>🗑</button></td>
                   <td>✎</td>
                 </tr>
               </>);

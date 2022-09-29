@@ -9,20 +9,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 let carsMockData = [
-    {
-        "id": 1,
-        "brand": "Hyundai",
-        "name": "Ioniq",
-        "releaseYear": 2017,
-        "color": "blue"
-    },
-    {
-        "id": 2,
-        "brand": "Toyota",
-        "name": "Prius",
-        "releaseYear": 2007,
-        "color": "blue"
-    },
+
 ]
 
 /** Create GET API. API shoudl return  const carsMockData*/
@@ -56,14 +43,16 @@ app.post('/post', (req, res) => {
 */
 
 app.delete('/delete', (req, res) => {
+
     let id = req.body.id;
     let updatedCarsMockData = carsMockData.filter((car) => car.id !== id);
-    if (updatedCarsMockData.length === carsMockData) {
-        res.status(500).send("No car with give id exists")
+    if (updatedCarsMockData.length === carsMockData.length) {
+        res.status(500).send("No car with give id exists");
     } else {
         carsMockData = updatedCarsMockData;
         res.send(carsMockData);
     }
+
 });
 
 /** Create PUT API. 
