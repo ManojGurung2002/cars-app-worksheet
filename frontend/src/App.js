@@ -18,6 +18,7 @@ function Cars() {
     const response = await fetch("http://localhost:3001/list").then((res) => res.json());
     setCarsData(response);
   };
+  
   useEffect(() => {
     getCarsData()
   }, [])
@@ -37,7 +38,7 @@ function Cars() {
     const response = await fetch("http://localhost:3001/post", {
       method: "POST",
       body: JSON.stringify({
-        id: event.target.id.value,
+        id: parseInt(event.target.id.value),
         brand: event.target.brand.value,
         name: event.target.name.value,
         releaseYear: event.target.releaseYear.value,
@@ -58,12 +59,13 @@ function Cars() {
   // }
 
   const handleDelete = async (event) => {
+
     event.preventDefault();
 
     let response = await fetch("http://localhost:3001/delete", {
       method: "DELETE",
       body: JSON.stringify({
-        id: event.target.parentElement.id,
+        id: parseInt(event.target.parentElement.id),
       }),
       headers: { 'Content-Type': 'application/json' }
     }).then(res => res.json());
@@ -136,7 +138,6 @@ function Cars() {
 
           {carsData.map((car) => {
             return (
-              <>
                 <tr>
                   <td>{car.id}</td>
                   <td>{car.brand}</td>
@@ -145,8 +146,7 @@ function Cars() {
                   <td>{car.color}</td>
                   <td id={car.id}><button onClick={handleDelete}>🗑</button></td>
                   <td>✎</td>
-                </tr>
-              </>);
+                </tr>);
           })}
 
         </tbody>

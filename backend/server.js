@@ -9,7 +9,41 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 let carsMockData = [
-
+    {
+        "id": 1,
+        "brand": "Hyundai",
+        "name": "Ioniq",
+        "releaseYear": 2017,
+        "color": "blue"
+    },
+    {
+        "id": 2,
+        "brand": "Toyota",
+        "name": "Prius",
+        "releaseYear": 2007,
+        "color": "blue"
+    },
+    {
+        "id": 3,
+        "brand": "Chevrolet",
+        "name": "Aveo",
+        "releaseYear": 2007,
+        "color": "white"
+    },
+    {
+        "id": 4,
+        "brand": "BMW",
+        "name": "M5",
+        "releaseYear": 2017,
+        "color": "White"
+    },
+    {
+        "id": 5,
+        "brand": "Tesla",
+        "name": "S",
+        "releaseYear": 2019,
+        "color": "Black"
+    }
 ]
 
 /** Create GET API. API shoudl return  const carsMockData*/
@@ -45,11 +79,11 @@ app.post('/post', (req, res) => {
 app.delete('/delete', (req, res) => {
 
     let id = req.body.id;
-    let updatedCarsMockData = carsMockData.filter((car) => car.id !== id);
-    if (updatedCarsMockData.length === carsMockData.length) {
-        res.status(500).send("No car with give id exists");
+    const initialCarsMockData = [...carsMockData];
+    carsMockData = carsMockData.filter((car) => car.id !== id);
+    if (initialCarsMockData.length === carsMockData.length) {
+        res.status(500).send("No car with give id exists")
     } else {
-        carsMockData = updatedCarsMockData;
         res.send(carsMockData);
     }
 
